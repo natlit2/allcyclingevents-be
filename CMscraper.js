@@ -5,9 +5,10 @@ async function scrapeEvent(url) {
   const page = await browser.newPage();
   await page.goto(url);
 
-  const [el] = await page.$x('//*[@id="fergcorp_milestone-2"]/div/div[1]/span');
-
-  const txt = await el.getProperty("textContent");
+  const [dateElement] = await page.$x(
+    '//*[@id="fergcorp_milestone-2"]/div/div[1]/span'
+  );
+  const txt = await dateElement.getProperty("textContent");
   const date = await txt.jsonValue();
 
   console.log({ date });
