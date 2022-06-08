@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/natlit2/allcyclingevents-be#readme",
   "dependencies": {
+    "dotenv": "^16.0.1",
+    "mongoose": "^6.3.6",
     "puppeteer": "^14.3.0"
   }
 }
