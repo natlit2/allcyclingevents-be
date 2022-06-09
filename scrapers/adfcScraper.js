@@ -29,7 +29,11 @@ async function scrapeEvent(url) {
   // console.log(links);
 
   // saving the data in mongo
-  new Event({ title: txt, eventTitle }).save();
+  new Event({
+    title: txt,
+    eventTitle,
+    link: eventLink,
+  }).save();
   browser.close();
 }
 scrapeEvent("http://adfc-berlin.de/aktiv-werden/bei-demonstrationen.html");
