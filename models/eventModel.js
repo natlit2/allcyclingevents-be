@@ -10,10 +10,9 @@ const EventSchema = new mongoose.Schema({
   date: {
     type: String,
   },
-  // link: {
-  //   type: String,
-  //   required: true,
-  // },
+  link: {
+    type: String,
+  },
 });
 
 const Event = mongoose.model("Event", EventSchema);
