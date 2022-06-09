@@ -1,4 +1,6 @@
 const puppeteer = require("puppeteer");
+const Event = require("../models/eventModel");
+const connectDB = require("../dbinit");
 
 async function scrapeEvent(url) {
   const browser = await puppeteer.launch();
@@ -10,8 +12,12 @@ async function scrapeEvent(url) {
   const eventTitle = await txt.jsonValue();
 
   console.log({ eventTitle });
+  // saving the data in mongo
+  new Event({ title: txt, eventTitle }).save();
 
   browser.close();
 }
-
 scrapeEvent("http://adfc-berlin.de/aktiv-werden/bei-demonstrationen.html");
+
+//esport the function to server.js
+//module.exports = scrapeEvent;
