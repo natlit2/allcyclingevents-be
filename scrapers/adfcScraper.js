@@ -7,6 +7,7 @@ async function scrapeEvent(url) {
   const page = await browser.newPage();
   await page.goto(url);
 
+  //scrape the title
   const [titleElement] = await page.$x('//*[@id="content"]/div[4]/div[1]/a/h2');
   const txt = await titleElement.getProperty("textContent");
   const eventTitle = await txt.jsonValue();
@@ -14,6 +15,8 @@ async function scrapeEvent(url) {
   console.log({ eventTitle });
   // saving the data in mongo
   new Event({ title: txt, eventTitle }).save();
+
+  //scrape the link to the event
 
   browser.close();
 }
