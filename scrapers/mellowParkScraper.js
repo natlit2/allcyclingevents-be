@@ -24,16 +24,8 @@ async function scrapeEvent(url) {
     "#events > div > div > div.mod_eventlist.col-xs-12.block > div.event.layout_short.col-md-4.col-xs-12.col-sm-6.upcoming.even.first.last.cal_2 > div > h3 > a";
   const eventLink = await page.$eval(linkSelector, (el) => el.href);
   console.log(`the event link is: ${eventLink}`);
-  //console.log(eventLink);
 
   // scrape the date of the event
-  // here I am getting undefined
-  //   const dateSelector =
-  //     "#events > div > div > div.mod_eventlist.col-xs-12.block > div.event.layout_short.col-md-4.col-xs-12.col-sm-6.upcoming.even.first.last.cal_2 > div > p > time";
-  //   const eventDate = await page.$eval(dateSelector, (el) => el.datetime);
-  //   console.log(`the event date is: ${eventDate}`);
-
-  ////// take 2 on the date
   const [dateElement] = await page.$x(
     '//*[@id="events"]/div/div/div[1]/div[3]/div/p/time'
   );
@@ -41,8 +33,9 @@ async function scrapeEvent(url) {
   //get the title -> this works
   const datetime = await dateElement.getProperty("textContent");
   const eventDate = await datetime.jsonValue();
-  //// to get all links on the page
+
   console.log(`the even date is: ${eventDate}`);
+  //// to get all links on the page
   // const selector = "a.item-link";
   // const links = await page.$$eval(selector, (am) =>
   //   am.filter((e) => e.href).map((e) => e.href)
