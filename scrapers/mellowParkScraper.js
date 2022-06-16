@@ -8,15 +8,19 @@ async function scrapeEvent(url) {
   await page.goto(url);
 
   //scrape the title
-  const [titleElement] = await page.$x('//*[@id="content"]/div[4]/div[1]/a/h2');
+  const [titleElement] = await page.$x(
+    '//*[@id="events"]/div/div/div[1]/div[3]/div/h3/a'
+  );
 
+  //get the title -> this works
   const txt = await titleElement.getProperty("textContent");
   const eventTitle = await txt.jsonValue();
 
   console.log(`the event title is: ${eventTitle}`);
   //////scrape the link to the event
-  ////to get 1 specific link
-  const selector = "a.item-link";
+
+  ////to get 1 specific link -> this does not work need to fix the selector
+  const selector = "a.getAttribute('href')";
   const eventLink = await page.$eval(selector, (el) => el.href);
   console.log(`the event link is: ${eventLink}`);
 
@@ -36,4 +40,4 @@ async function scrapeEvent(url) {
   }).save();
   browser.close();
 }
-scrapeEvent("http://adfc-berlin.de/aktiv-werden/bei-demonstrationen.html");
+scrapeEvent("https://www.mellowpark.de/events.html");
