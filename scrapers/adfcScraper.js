@@ -9,31 +9,18 @@ async function scrapeEvent(url) {
 
   //scrape the title
   const [titleElement] = await page.$x('//*[@id="content"]/div[4]/div[1]/a/h2');
-
   const txt = await titleElement.getProperty("textContent");
   const eventTitle = await txt.jsonValue();
 
-  console.log(`the event title is: ${eventTitle}`);
-  //////scrape the link to the event
-  ////to get 1 specific link
-  const selector = "a.item-link";
-  const eventLink = await page.$eval(selector, (el) => el.href);
-  console.log(`the event link is: ${eventLink}`);
-
-  //// to get all links on the page
-
-  // const selector = "a.item-link";
-  // const links = await page.$$eval(selector, (am) =>
-  //   am.filter((e) => e.href).map((e) => e.href)
-  // );
-  // console.log(links);
-
+  console.log({ eventTitle });
   // saving the data in mongo
-  new Event({
-    title: txt,
-    eventTitle,
-    link: eventLink,
-  }).save();
+  new Event({ title: txt, eventTitle }).save();
+
+  //scrape the link to the event
+
   browser.close();
 }
 scrapeEvent("http://adfc-berlin.de/aktiv-werden/bei-demonstrationen.html");
+
+//esport the function to server.js
+//module.exports = scrapeEvent;
