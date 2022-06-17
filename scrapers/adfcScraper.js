@@ -5,7 +5,11 @@ const connectDB = require("../dbinit");
 async function scrapeEvent(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto(url);
+  try {
+    await page.goto(url);
+  } catch (err) {
+    console.log("the page didn't load");
+  }
 
   //scrape the title
   const [titleElement] = await page.$x('//*[@id="content"]/div[4]/div[1]/a/h2');

@@ -11,7 +11,15 @@ const events = require("./routes/eventRoute");
 //here we deside how the route would be called
 app.use("/events", events);
 
-app.get("/", (req, res) => {
+//the error handler needs to be fixed, the code is working but a time out error is logged anyway
+app.get("/", (req, res, next) => {
+  setTimeout(() => {
+    try {
+      throw new Error("your request has timed out ond results were not found");
+    } catch (err) {
+      next(err);
+    }
+  }, 1000);
   res.send("Hello World!");
 });
 
