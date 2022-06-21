@@ -23,14 +23,31 @@ async function scrapeAllEvents(url) {
   );
   console.log(`THE EVENTS LINKS ARE: ${eventLinks}`);
 
-  // const eventLinks = await page.evaluate(() =>
-  //   Array.from(document.querySelectorAll("a[href]"), (a) =>
-  //     a.getAttribute("href")
-  //   )
-  // );
-
   //for each link in the array scrape the title, event img and event date
+  for await (const eventLink of eventLinks) {
+    console.log(`THIS IS THE EVENT LINK: ${eventLink}`);
+    const eventPage = await browser.newPage();
+    try {
+      await eventPage.goto(eventLink);
+      //scrape the title
+      const [titleElement] = await eventPage.$x(
+        '//*[@id="events-detail"]/div/div/div[1]/div[1]/div/div/div[1]/h2'
+        //add error if page not returned
+      ); //else do the below code
+      const txt = await titleElement.getProperty("textContent");
+      const eventTitle = await txt.jsonValue();
+
+      //add here the scraper for the event date
+
+      //add here the scraper for the event image
+
+      console.log(`THE EVENT TITLE IS: ${eventTitle}`);
+    } catch (err) {
+      console.log("the page did NOT load");
+    }
+  }
 
   // save the event link, title, imglink, and date intoa mongoose object and save to mongo
+  browser.close();
 }
 scrapeAllEvents("https://www.mellowpark.de/events.html");

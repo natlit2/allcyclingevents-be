@@ -13,6 +13,9 @@ const EventSchema = new mongoose.Schema({
   link: {
     type: String,
   },
+  imgLink: {
+    type: String,
+  },
 });
 
 const Event = mongoose.model("Event", EventSchema);
