@@ -38,7 +38,7 @@ async function scrapeEvent(url) {
   const datetime = await dateElement.getProperty("textContent");
   const eventDate = await datetime.jsonValue();
 
-  console.log(`the even date is: ${eventDate}`);
+  console.log(`the event date is: ${eventDate}`);
   //// to get all links on the page
   // const selector = "a.item-link";
   // const links = await page.$$eval(selector, (am) =>
