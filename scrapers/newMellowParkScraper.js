@@ -29,6 +29,7 @@ async function scrapeAllEvents(url) {
     const eventPage = await browser.newPage();
     try {
       await eventPage.goto(eventLink);
+
       //scrape the title
       const [titleElement] = await eventPage.$x(
         '//*[@id="events-detail"]/div/div/div[1]/div[1]/div/div/div[1]/h2'
@@ -36,18 +37,35 @@ async function scrapeAllEvents(url) {
       ); //else do the below code
       const txt = await titleElement.getProperty("textContent");
       const eventTitle = await txt.jsonValue();
+      console.log(`THE EVENT TITLE IS: ${eventTitle}`);
 
       //add here the scraper for the event date
 
+      const [dateElement] = await eventPage.$x(
+        '//*[@id="events-detail"]/div/div/div[1]/div[1]/div/div/div[1]/p/time'
+      );
+      const datetime = await dateElement.getProperty("textContent");
+      const eventDate = await datetime.jsonValue();
+      console.log(`THE EVENT DATE IS: ${eventDate}`);
+
       //add here the scraper for the event image
 
-      console.log(`THE EVENT TITLE IS: ${eventTitle}`);
+      const imglinkSelector =
+        "#events-detail > div > div > div.col-xs-12.mod_eventreader.block > div.event.layout_full.block > figure > img";
+      const imgLink = await eventPage.$eval(imglinkSelector, (el) => el.src);
+      console.log(`IMAGE LINK IS: ${imgLink}`);
     } catch (err) {
       console.log("the page did NOT load");
     }
   }
 
   // save the event link, title, imglink, and date intoa mongoose object and save to mongo
+  // new Event({
+  //   title: txt,
+  //   eventTitle,
+  //   link: eventLink,
+  //   date: eventDate,
+  // }).save();
   browser.close();
 }
 scrapeAllEvents("https://www.mellowpark.de/events.html");
