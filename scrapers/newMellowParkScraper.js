@@ -54,18 +54,20 @@ async function scrapeAllEvents(url) {
         "#events-detail > div > div > div.col-xs-12.mod_eventreader.block > div.event.layout_full.block > figure > img";
       const imgLink = await eventPage.$eval(imglinkSelector, (el) => el.src);
       console.log(`IMAGE LINK IS: ${imgLink}`);
+
+      await Event.create({
+        // title: txt,
+        title: eventTitle,
+        date: eventDate,
+        link: eventLink,
+        imgLink: imgLink,
+      });
     } catch (err) {
       console.log("the page did NOT load");
     }
   }
-
   // save the event link, title, imglink, and date intoa mongoose object and save to mongo
-  // new Event({
-  //   title: txt,
-  //   eventTitle,
-  //   link: eventLink,
-  //   date: eventDate,
-  // }).save();
+
   browser.close();
 }
 scrapeAllEvents("https://www.mellowpark.de/events.html");
