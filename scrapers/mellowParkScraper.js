@@ -5,21 +5,25 @@ const connectDB = require("../dbinit");
 async function scrapeEvent(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto(url);
+  try {
+    await page.goto(url);
+  } catch (err) {
+    console.log("the page did NOT load");
+  }
 
   //scrape the title
   const [titleElement] = await page.$x(
     '//*[@id="events"]/div/div/div[1]/div[3]/div/h3/a'
-  );
-
-  //get the title -> this works
+    //add error if page not returned
+  ); //else do the below code
   const txt = await titleElement.getProperty("textContent");
   const eventTitle = await txt.jsonValue();
 
   console.log(`the event title is: ${eventTitle}`);
-  //////scrape the link to the event
 
+  ////scrape the link to the event
   ////to get 1 specific link
+
   const linkSelector =
     "#events > div > div > div.mod_eventlist.col-xs-12.block > div.event.layout_short.col-md-4.col-xs-12.col-sm-6.upcoming.even.first.last.cal_2 > div > h3 > a";
   const eventLink = await page.$eval(linkSelector, (el) => el.href);
@@ -34,7 +38,7 @@ async function scrapeEvent(url) {
   const datetime = await dateElement.getProperty("textContent");
   const eventDate = await datetime.jsonValue();
 
-  console.log(`the even date is: ${eventDate}`);
+  console.log(`the event date is: ${eventDate}`);
   //// to get all links on the page
   // const selector = "a.item-link";
   // const links = await page.$$eval(selector, (am) =>

@@ -5,11 +5,16 @@ const db = require("../dbinit"); //this will run the db connection once this scr
 async function scrapeEvent(url) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.goto(url);
+  try {
+    await page.goto(url);
+  } catch (err) {
+    console.log("the page did NOT load");
+  }
 
   const [dateElement] = await page.$x(
     '//*[@id="fergcorp_milestone-2"]/div/div[1]/span'
   );
+
   const txt = await dateElement.getProperty("textContent");
   const date = await txt.jsonValue();
 
