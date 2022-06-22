@@ -20,7 +20,7 @@ async function scrapeAllEvents(url) {
   const eventLinks = await page.$$eval(linkSelector, (arr) =>
     arr.map((el) => el.href)
   );
-  console.log(`THE EVENTS LINKS ARE: ${eventLinks}`);
+  // console.log(`THE EVENTS LINKS ARE: ${eventLinks}`);
 
   //for each link in the array scrape the title, event img and event date
   for await (const eventLink of eventLinks) {
@@ -52,15 +52,81 @@ async function scrapeAllEvents(url) {
         "#events-detail > div > div > div.col-xs-12.mod_eventreader.block > div.event.layout_full.block > figure > img";
       const imgLink = await eventPage.$eval(imglinkSelector, (el) => el.src);
       console.log(`IMAGE LINK IS: ${imgLink}`);
+
+      const formatDate = (str) => {
+        const toArr = str.split(" ");
+        let month;
+        switch (toArr[1]) {
+          case "Jan":
+            month = "01";
+            break;
+          case "Feb":
+            month = "02";
+            break;
+          case "Mär":
+            month = "03";
+            break;
+          case "Apr":
+            month = "04";
+            break;
+          case "Mai":
+            month = "05";
+            break;
+          case "Jun":
+            month = "06";
+            break;
+          case "Jul":
+            month = "07";
+            break;
+          case "Aug":
+            month = "08";
+            break;
+          case "Sep":
+            month = "09";
+            break;
+          case "Okt":
+            month = "10";
+            break;
+          case "Nov":
+            month = "11";
+            break;
+          case "Dez":
+            month = "12";
+            break;
+          default:
+            break;
+        }
+        return `${toArr[2]}-${month}-${toArr[0].replace(".", "")}`;
+      };
+
+      const startDate = new Date(
+        eventDate.includes("–")
+          ? formatDate(eventDate.substring(0, eventDate.indexOf("–")))
+          : formatDate(eventDate)
+      );
+
+      const endDate = new Date(
+        eventDate.includes("–")
+          ? formatDate(
+              eventDate
+                .substring(eventDate.indexOf("–") + 1, eventDate.length)
+                .trim()
+            )
+          : new Date(startDate).setHours(startDate.getHours() + 2)
+      );
+
+      console.log("start:", startDate);
+      console.log("end:", endDate);
       // save the event link, title, imglink, and date intoa mongoose object and save to mongo
       await Event.create({
         title: eventTitle,
-        date: eventDate,
+        start: startDate,
+        end: endDate,
         link: eventLink,
         imgLink: imgLink,
       });
     } catch (err) {
-      console.log("the page did NOT load");
+      console.log(err);
     }
   }
   browser.close();

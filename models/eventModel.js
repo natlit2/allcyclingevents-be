@@ -7,8 +7,11 @@ const EventSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 255,
   },
-  date: {
-    type: String,
+  start: {
+    type: Date,
+  },
+  end: {
+    type: Date,
   },
   link: {
     type: String,
