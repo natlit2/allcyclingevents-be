@@ -126,18 +126,22 @@ async function scrapeEvent(url) {
     console.log("start:", startDate);
     console.log("end:", endDate);
 
-    //saving the data in mongo
-    await Event.create({
+    // check if there is an event already in the DB title && date
+    const found = await Event.findOne({ title: eventTitle, start: startDate });
+    if (found) return console.log("Event already exists");
+
+    const newEvent = await Event.create({
       title: eventTitle,
       start: startDate,
       end: endDate,
       link: eventLink,
       imgLink: imgLink,
     });
+    console.log(`New event created with id ${newEvent._id}`);
   } catch (err) {
     console.log(`Oooops...there was an Error on the event page: ${err}`);
   }
   browser.close();
-  //for loop closer}
+  return;
 }
 scrapeEvent("http://adfc-berlin.de/aktiv-werden/bei-demonstrationen.html");
