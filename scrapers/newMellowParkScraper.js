@@ -117,18 +117,28 @@ async function scrapeAllEvents(url) {
 
       console.log("start:", startDate);
       console.log("end:", endDate);
+
+      // check if there is an event already in the DB title && date
+      const found = await Event.findOne({
+        title: eventTitle,
+        start: startDate,
+      });
+      if (found) return console.log("Event already exists");
+
       // save the event link, title, imglink, and date intoa mongoose object and save to mongo
-      await Event.create({
+      const newEvent = await Event.create({
         title: eventTitle,
         start: startDate,
         end: endDate,
         link: eventLink,
         imgLink: imgLink,
       });
+      console.log(`New event created with id ${newEvent._id}`);
     } catch (err) {
       console.log(err);
     }
   }
   browser.close();
+  return;
 }
 scrapeAllEvents("https://www.mellowpark.de/events.html");
