@@ -55,7 +55,6 @@ async function scrapeEvent(url) {
   // add 2 hours to the formated date to create the endDate
   const endDate = moment(formatedDate).add(2, "h");
 
-  // const endDate = new Date(formatedDate.setHours(formatedDate.getHours() + 2));
   console.log("end:", endDate);
 
   //for await (const eventLink of eventLinks) {
