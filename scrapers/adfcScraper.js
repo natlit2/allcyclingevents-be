@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const Event = require("../models/eventModel");
-const connectDB = require("../dbinit");
-const moment = require("moment");
+//const connectDB = require("../dbinit");
+//const moment = require("moment");
 
 async function scrapeEvent(url) {
   const browser = await puppeteer.launch();
