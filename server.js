@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 5000;
-const connectDB = require("./dbinit");
+const port = proccess.env.PORT || 5000;
+//const connectDB = require("./dbinit");
 const events = require("./routes/eventRoute");
 const cors = require("cors");
 

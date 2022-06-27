@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const Event = require("../models/eventModel");
-//const connectDB = require("../dbinit");
+const connectDB = require("../dbinit");
 const moment = require("moment");
 
 async function scrapeEvent(url) {
@@ -34,12 +34,12 @@ async function scrapeEvent(url) {
   console.log(`IMAGE LINK IS: ${imgLink}`);
 
   //scrape the date element
-  const [dateElement] = await page.$x(
-    "/html/body/div[3]/div[2]/div[2]/div[3]/div/div/div[2]/div[2]/div[1]/dl/dd"
-  );
-  const datetime = await dateElement.getProperty("textContent");
-  const eventDate = await datetime.jsonValue();
-  console.log(`THE EVENT DATE IS: ${eventDate}`);
+  //   const [dateElement] = await page.$x(
+  //     "/html/body/div[3]/div[2]/div[2]/div[3]/div/div/div[2]/div[2]/div[1]/dl/dd"
+  //   );
+  //   const datetime = await dateElement.getProperty("textContent");
+  //   const eventDate = await datetime.jsonValue();
+  //   console.log(`THE EVENT DATE IS: ${eventDate}`);
 
   // //format the date
 
@@ -49,13 +49,13 @@ async function scrapeEvent(url) {
   // };
 
   //format the evetn date! use moment?
-  const formatedDate = moment(eventDate, "DD.MM.YYYY").format();
-  console.log(`THE FORMATED DATE IS : ${formatedDate}`);
+  //   const formatedDate = moment(eventDate, "DD.MM.YYYY").format();
+  //   console.log(`THE FORMATED DATE IS : ${formatedDate}`);
 
   // add 2 hours to the formated date to create the endDate
-  const endDate = moment(formatedDate).add(2, "h");
+  //   const endDate = moment(formatedDate).add(2, "h");
 
-  console.log("end:", endDate);
+  //   console.log("end:", endDate);
 
   //for await (const eventLink of eventLinks) {
 
@@ -74,19 +74,19 @@ async function scrapeEvent(url) {
     console.log(`THE EVENT TITLE IS: ${eventTitle}`);
 
     // // check if there is an event already in the DB title && date
-    const found = await Event.findOne({
-      title: eventTitle,
-      start: formatedDate,
-    });
-    if (found) return console.log("Event already exists");
+    // const found = await Event.findOne({
+    //   title: eventTitle,
+    //   start: formatedDate,
+    // });
+    // if (found) return console.log("Event already exists");
 
-    const newEvent = await Event.create({
-      title: eventTitle,
-      start: formatedDate,
-      end: endDate,
-      link: eventLink,
-      imgLink: imgLink,
-    });
+    // const newEvent = await Event.create({
+    //   title: eventTitle,
+    //   start: formatedDate,
+    //   end: endDate,
+    //   link: eventLink,
+    //   imgLink: imgLink,
+    // });
     console.log(`New event created with id ${newEvent._id}`);
   } catch (err) {
     console.log(`Oooops...there was an Error on the event page: ${err}`);
@@ -94,4 +94,4 @@ async function scrapeEvent(url) {
   browser.close();
   //return;
 }
-scrapeEvent("https://criticalmass.in/berlin/");
+scrapeEvent("https://velocity.berlin/en/");

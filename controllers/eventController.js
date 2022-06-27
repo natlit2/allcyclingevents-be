@@ -1,5 +1,3 @@
-// const { json } = require("express/lib/response");
-// const { find } = require("../models/event");
 const Event = require("../models/eventModel");
 const connectDB = require("../dbinit");
 //import your scraper
