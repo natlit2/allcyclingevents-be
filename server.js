@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = proccess.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 //const connectDB = require("./dbinit");
 const events = require("./routes/eventRoute");
 const cors = require("cors");
