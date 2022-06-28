@@ -22,7 +22,7 @@ app.get("/", (req, res, next) => {
       next(err);
     }
   }, 1000);
-  res.send("Hello World!");
+  res.send("Allcyclingevents-berlin server is up and running!");
 });
 
 app.listen(port, () => {
