@@ -23,9 +23,24 @@ async function scrapeAllEvents(url) {
 
     console.log(eventLinks);
 
-    /*  const eventLinks = await page.$$eval(linkSelector, (arr) =>
-      arr.map((el) => el.href)
-    ); */
+    for await (const eventLink of eventLinks) {
+      //console.log(`THIS IS THE EVENT LINK: ${eventLink}`);
+      const baseURL = "https://touren-termine.adfc.de";
+      const fullEventLink = baseURL + eventLink;
+      const eventPage = await browser.newPage();
+      console.log(`Full Event Link: ${fullEventLink}`);
+      await eventPage.goto(fullEventLink);
+
+      //scrape the title
+      await eventPage.waitForSelector("h1", {
+        timeout: 10000,
+      });
+      const titleEl = await eventPage.evaluate(() => {
+        const selectTitleEl = document.querySelector("h1").innerText;
+        return selectTitleEl;
+      });
+      console.log(titleEl);
+    }
   } catch (err) {
     console.log(err);
   }
