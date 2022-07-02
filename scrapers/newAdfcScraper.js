@@ -10,7 +10,7 @@ async function scrapeAllEvents(url) {
   const page = await browser.newPage();
   try {
     await page.goto(url);
-    await page.waitForSelector(".list-group", { timeout: 10000 });
+    await page.waitForSelector(".list-group", { visible: true });
     const eventLinks = await page.evaluate(() => {
       const listGroup = document.querySelectorAll(".list-group a");
       console.log(listGroup);
@@ -24,7 +24,6 @@ async function scrapeAllEvents(url) {
     console.log(eventLinks);
 
     for await (const eventLink of eventLinks) {
-      //console.log(`THIS IS THE EVENT LINK: ${eventLink}`);
       const baseURL = "https://touren-termine.adfc.de";
       const fullEventLink = baseURL + eventLink;
       const eventPage = await browser.newPage();
@@ -39,7 +38,27 @@ async function scrapeAllEvents(url) {
         const selectTitleEl = document.querySelector("h1").innerText;
         return selectTitleEl;
       });
-      console.log(titleEl);
+      console.log(`THE EVENT TILTE IS: ${titleEl}`);
+
+      const dateElement = await eventPage.evaluate(() => {
+        const selectDateElement = document.querySelectorAll("dd")[1].innerText;
+        return selectDateElement;
+      });
+      console.log(`The Event Date is: ${dateElement}`);
+
+      //Make sure to parse and reformat the date before saving to the DB
+      //get the date from the Event element take only what you need and reformat it with moment
+      //reformat the date here
+
+      //scrape the image links from the main events page the same way as the links
+      await eventPage.waitForSelector("img.pswp__img", { visible: true });
+      await eventPage.screenshot({ path: "1.png" });
+      const imgElement = await eventPage.evaluate(() => {
+        const selectImgElement = document.querySelectorAll("img.pswp__img");
+        const imgUrls = Array.from(selectImgElement).map((v) => v.src);
+        return imgUrls;
+      });
+      console.log(`THESE ARE THE IMAGE URL: ${imgElement}`);
     }
   } catch (err) {
     console.log(err);
