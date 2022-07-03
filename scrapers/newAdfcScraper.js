@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const Event = require("../models/eventModel");
-//const connectDB = require("../dbinit");
+const connectDB = require("../dbinit");
 const moment = require("moment");
 const document = require("puppeteer");
 // startup puppeteer
@@ -21,7 +21,7 @@ async function scrapeAllEvents(url) {
       return links;
     });
 
-    console.log(eventLinks);
+    //console.log(eventLinks);
 
     for await (const eventLink of eventLinks) {
       const baseURL = "https://touren-termine.adfc.de";
@@ -48,7 +48,36 @@ async function scrapeAllEvents(url) {
 
       //Make sure to parse and reformat the date before saving to the DB
       //get the date from the Event element take only what you need and reformat it with moment
+      // Destructure date here
+      //Split the date
+      const destructuredDateArr = dateElement.split(". ");
+      const destDateArrStartTime = destructuredDateArr[2].split(" - ");
+      //console.log(`the destructured date is: ${destructuredDateArr}`);
+      //console.log(`date startTime: ${destDateArrStartTime[0]}`);
+      const dateToFormat =
+        destructuredDateArr[1] + " " + destDateArrStartTime[0];
+      //console.log(`this is the date to format:  ${dateToFormat}`);
+      //extract the date from the title
+      //take the last item in the array(the date) save to a variable and pass it to the date formater
+      //const eventDayDate = destructuredDateArr[1];
+      //console.log(eventDayDate);
+      //const eventMntYrTymDate = destructuredDateArr[2];
+      //console.log(eventMntYrTymDate);
+
       //reformat the date here
+
+      //format the evetn date! use moment?
+
+      const formatedDate =
+        moment(dateToFormat, "DD.MMMM.YYYY HH:mm").format() !== "Invalid date"
+          ? moment(dateToFormat, "DD.MMMM.YYYY HH:mm").format()
+          : moment(dateToFormat, "DD.MMMM.YYYY HH:mm").format();
+
+      console.log(`THE FORMATED DATE IS : ${formatedDate}`);
+      // add 2 hours to the formated date to create the endDate
+      const endDate = moment(formatedDate).add(2, "h");
+
+      console.log("end:", endDate);
 
       //scrape the image links from the main events page the same way as the links
       await eventPage.waitForSelector("img.pswp__img", { visible: true });
@@ -56,9 +85,27 @@ async function scrapeAllEvents(url) {
       const imgElement = await eventPage.evaluate(() => {
         const selectImgElement = document.querySelectorAll("img.pswp__img");
         const imgUrls = Array.from(selectImgElement).map((v) => v.src);
-        return imgUrls;
+        return imgUrls[0];
       });
-      console.log(`THESE ARE THE IMAGE URL: ${imgElement}`);
+      console.log(`THIS IS THE IMAGE URL: ${imgElement}`);
+
+      // check if there is an event already in the DB title && date
+      const found = await Event.findOne({
+        title: titleEl,
+        start: formatedDate,
+      });
+      if (found) return console.log("Event already exists");
+
+      // save the event link, title, imglink, and date intoa mongoose object and save to mongo
+      const newEvent = await Event.create({
+        title: titleEl,
+        start: formatedDate,
+        end: endDate,
+        link: fullEventLink,
+        imgLink: imgElement,
+      });
+
+      console.log(`New event created with id ${newEvent._id}`);
     }
   } catch (err) {
     console.log(err);
