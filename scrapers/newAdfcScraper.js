@@ -116,5 +116,5 @@ async function scrapeAllEvents(url) {
 }
 
 scrapeAllEvents(
-  "https://touren-termine.adfc.de/suche?beginning=2022-06-29&eventType=Radtour&includeSubsidiary=true&unitKey=154"
+  "https://touren-termine.adfc.de/suche?beginning=2022-07-04&eventType=Radtour&includeSubsidiary=true&unitKey=154"
 );
