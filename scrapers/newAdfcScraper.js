@@ -117,7 +117,8 @@ async function scrapeAllEvents(url) {
     console.log(err);
   }
 }
-
+const now = moment(new Date()).format("YYYY/MM/DD");
+console.log(now);
 scrapeAllEvents(
-  "https://touren-termine.adfc.de/suche?beginning=2022-07-04&eventType=Radtour&includeSubsidiary=true&unitKey=154"
+  `https://touren-termine.adfc.de/suche?beginning=${now}&eventType=Radtour&includeSubsidiary=true&unitKey=154`
 );
