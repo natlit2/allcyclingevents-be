@@ -6,9 +6,9 @@ const document = require("puppeteer");
 // startup puppeteer
 
 async function scrapeAllEvents(url) {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
   try {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
     await page.goto(url);
     await page.waitForSelector(".list-group", { visible: true });
     const eventLinks = await page.evaluate(() => {
@@ -32,7 +32,7 @@ async function scrapeAllEvents(url) {
 
       //scrape the title
       await eventPage.waitForSelector("h1", {
-        timeout: 10000,
+        visible: true,
       });
       const titleEl = await eventPage.evaluate(() => {
         const selectTitleEl = document.querySelector("h1").innerText;
@@ -94,7 +94,10 @@ async function scrapeAllEvents(url) {
         title: titleEl,
         start: formatedDate,
       });
-      if (found) return console.log("Event already exists");
+      if (found) {
+        console.log("Event already exists");
+        continue;
+      }
 
       // save the event link, title, imglink, and date intoa mongoose object and save to mongo
       const newEvent = await Event.create({
@@ -106,13 +109,13 @@ async function scrapeAllEvents(url) {
       });
 
       console.log(`New event created with id ${newEvent._id}`);
+      return;
     }
+    browser.close();
+    return;
   } catch (err) {
     console.log(err);
   }
-
-  browser.close();
-  return;
 }
 
 scrapeAllEvents(
