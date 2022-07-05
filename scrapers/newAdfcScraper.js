@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 const Event = require("../models/eventModel");
-const connectDB = require("../dbinit");
+//const connectDB = require("../dbinit");
 const moment = require("moment");
 const document = require("puppeteer");
 // startup puppeteer
