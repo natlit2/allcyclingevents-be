@@ -1,11 +1,12 @@
 const puppeteer = require("puppeteer");
 const Event = require("../models/eventModel");
-//const connectDB = require("../dbinit");
+const connectDB = require("../dbinit");
 const moment = require("moment");
 const document = require("puppeteer");
 // startup puppeteer
 
 async function scrapeAllEvents(url) {
+  connectDB();
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -90,6 +91,7 @@ async function scrapeAllEvents(url) {
       console.log(`THIS IS THE IMAGE URL: ${imgElement}`);
 
       // check if there is an event already in the DB title && date
+
       const found = await Event.findOne({
         title: titleEl,
         start: formatedDate,
@@ -117,7 +119,8 @@ async function scrapeAllEvents(url) {
     console.log(err);
   }
 }
-
+const now = moment(new Date()).format("YYYY/MM/DD");
+console.log(now);
 scrapeAllEvents(
-  "https://touren-termine.adfc.de/suche?beginning=2022-07-04&eventType=Radtour&includeSubsidiary=true&unitKey=154"
+  `https://touren-termine.adfc.de/suche?beginning=${now}&eventType=Radtour&includeSubsidiary=true&unitKey=154`
 );
