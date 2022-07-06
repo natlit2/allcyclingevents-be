@@ -4,6 +4,7 @@ const connectDB = require("../dbinit");
 const moment = require("moment");
 
 async function scrapeEvent(url) {
+  connectDB();
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   try {
