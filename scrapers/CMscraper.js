@@ -87,3 +87,5 @@ async function scrapeEvent(url) {
   //return;
 }
 scrapeEvent("https://criticalmass.in/berlin/");
+
+module.exports = scrapeEvent;

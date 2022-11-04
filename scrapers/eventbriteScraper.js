@@ -97,3 +97,5 @@ async function scrapeAllEvents(url) {
 }
 
 scrapeAllEvents("https://www.eventbrite.com/d/online/cycling/");
+
+module.exports = scrapeAllEvents;

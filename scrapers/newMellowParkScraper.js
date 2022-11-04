@@ -15,6 +15,7 @@ async function scrapeAllEvents(url) {
   }
 
   //get all links from the event page and save them in an array
+  //need to setup a time out for the scraper for when there is not more new info the program will stop running
 
   const linkSelector =
     "#events > div > div > div.mod_eventlist.col-xs-12.block > div > div > div.teaser > p.more > a";
@@ -120,11 +121,13 @@ async function scrapeAllEvents(url) {
       console.log("end:", endDate);
 
       // check if there is an event already in the DB title && date
-      const found = await Event.findOne({
-        title: eventTitle,
-        start: startDate,
-      });
-      if (found) return console.log("Event already exists");
+      //BUG: there is a scope issue here that I need to fix, now if an event is found the scraping will stop
+
+      // const found = await Event.findOne({
+      //   title: eventTitle,
+      //   start: startDate,
+      // });
+      // if (found) return console.log("Event already exists");
 
       // save the event link, title, imglink, and date intoa mongoose object and save to mongo
       const newEvent = await Event.create({
@@ -143,3 +146,5 @@ async function scrapeAllEvents(url) {
   return;
 }
 scrapeAllEvents("https://www.mellowpark.de/events.html");
+
+module.exports = scrapeAllEvents;

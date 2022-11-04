@@ -124,3 +124,5 @@ console.log(now);
 scrapeAllEvents(
   `https://touren-termine.adfc.de/suche?beginning=${now}&eventType=Radtour&includeSubsidiary=true&unitKey=154`
 );
+
+module.exports = scrapeAllEvents;
